@@ -23,7 +23,11 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countSumLengthOfWords(String text) {
-        return 0;
+        int totalWordsLength = 0;
+        for (String word : getWords(text)) {
+            totalWordsLength += word.length();
+        }
+        return totalWordsLength;
     }
 
     /**
@@ -34,7 +38,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countNumberOfWords(String text) {
-        return 0;
+        return getWords(text).size();
     }
 
     /**
@@ -44,7 +48,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countNumberOfUniqueWords(String text) {
-        return 0;
+        return getUniqueWords(text).size();
     }
 
     /**
@@ -57,7 +61,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public List<String> getWords(String text) {
-        return emptyList();
+        return Arrays.asList(text.split("[^\\w']+"));
     }
 
     /**
@@ -70,7 +74,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public Set<String> getUniqueWords(String text) {
-        return emptySet();
+        return new HashSet<>(getWords(text));
     }
 
     /**
@@ -82,7 +86,15 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public Map<String, Integer> countNumberOfWordsRepetitions(String text) {
-        return emptyMap();
+        Map<String, Integer> wordsMap = new HashMap<>();
+        for (String word : getWords(text)) {
+            if (!wordsMap.containsKey(word)) {
+                wordsMap.put(word, 1);
+            } else {
+                wordsMap.put(word, wordsMap.get(word) + 1);
+            }
+        }
+        return wordsMap;
     }
 
     /**
@@ -95,6 +107,12 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public List<String> sortWordsByLength(String text, Direction direction) {
-        return emptyList();
+        List<String> sortedWordsList = getWords(text);
+        if (direction.equals(Direction.ASC)) {
+            sortedWordsList.sort((s1, s2) -> s1.length() - s2.length());
+        } else {
+            sortedWordsList.sort((s1, s2) -> s2.length() - s1.length());
+        }
+        return sortedWordsList;
     }
 }
